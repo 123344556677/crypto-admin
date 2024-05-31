@@ -15,6 +15,7 @@ import { getPendingCashDeposits, getApprovedCashDeposits } from "Api/Api";
 import { updateDepositStatus } from "Api/Api";
 import { errorAlert } from "Alerts/Alerts";
 import { successAlert } from "Alerts/Alerts";
+import { deleteDeposit } from "Api/Api";
 
 const CashDeposit = () => {
   const [approvedCash, setApprovedCash] = useState([]);
@@ -55,7 +56,7 @@ const CashDeposit = () => {
     setPendingCash(updatedPendingCash);
     const values = {
       status: event.target.value,
-      additionalAmount:addAmount
+      additionalAmount:parseFloat(addAmount)
     };
     try {
       const response = await updateDepositStatus(id, values);
@@ -81,7 +82,16 @@ const CashDeposit = () => {
       errorAlert(err?.response?.data?.err);
     }
   };
-  console.log(addAmount,"adAmount------>")
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteDeposit(id);
+      successAlert(response?.data?.message);
+      window.location.reload(false);
+    } catch (err) {
+      errorAlert(err?.response?.data?.err);
+    }
+  };
   return (
     <div className="content">
       <Row>
@@ -122,11 +132,13 @@ const CashDeposit = () => {
 
                     <th>Status</th>
                     <th>Date</th>
+                    <th>Actions</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   {paymentCheck === "pending" &&
-                    pendingCash.map((data, index) => (
+                    pendingCash?.map((data, index) => (
                       <tr key={index}>
                         <td>
                           {data?.userId?.fname || "-"} {data?.userId?.lname}
@@ -169,10 +181,20 @@ const CashDeposit = () => {
                             "MMMM Do YYYY, h:mm:ss a"
                           )}
                         </td>
+                        <td onClick={() => handleDelete(data?._id)}>
+                          <i
+                            className="fa fa-trash ml-lg-3"
+                            style={{
+                              color: "black",
+                              fontSize: "20px",
+                              cursor: "pointer",
+                            }}
+                          ></i>
+                        </td>
                       </tr>
                     ))}
                   {paymentCheck === "approved" &&
-                    approvedCash.map((data, index) => (
+                    approvedCash?.map((data, index) => (
                       <tr key={index}>
                         <td>
                           {data?.userId?.fname || "-"} {data?.userId?.lname}
@@ -205,6 +227,16 @@ const CashDeposit = () => {
                           {moment(data?.createdAt).format(
                             "MMMM Do YYYY, h:mm:ss a"
                           )}
+                        </td>
+                        <td onClick={() => handleDelete(data?._id)}>
+                          <i
+                            className="fa fa-trash ml-lg-3"
+                            style={{
+                              color: "black",
+                              fontSize: "20px",
+                              cursor: "pointer",
+                            }}
+                          ></i>
                         </td>
                       </tr>
                     ))}

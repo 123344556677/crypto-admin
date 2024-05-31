@@ -1,14 +1,9 @@
 import Dashboard from "views/Dashboard.js";
-import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
-import Maps from "views/Map.js";
-import UserPage from "views/User.js";
-import UpgradeToPro from "views/Upgrade.js";
 import CashDeposit from "views/CashDeposit";
-import { Login } from "views/Login";
 import { useEffect } from "react";
+import CashWithdrawal from "views/CashWithdrawal";
+import Users from "views/Users";
 
 const LogoutComponent = () => {
   useEffect(() => {
@@ -31,6 +26,13 @@ var routes = [
     layout: "/admin",
   },
   {
+    path: "/users",
+    name: "Users",
+    icon: "nc-icon nc-single-02",
+    component: <Users/>,
+    layout: "/admin",
+  },
+  {
     path: "/deposits",
     name: "Cash Deposits",
     icon: "nc-icon nc-bank",
@@ -39,9 +41,9 @@ var routes = [
   },
   {
     path: "/withdraw",
-    name: "Cash Withdraw",
+    name: "Cash Withdrawals",
     icon: "nc-icon nc-money-coins",
-    component: <CashDeposit/>,
+    component: <CashWithdrawal/>,
     layout: "/admin",
   },
   {

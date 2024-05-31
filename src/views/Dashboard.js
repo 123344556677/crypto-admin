@@ -25,7 +25,6 @@ function Dashboard() {
     const fetchInfoCounts = async () => {
       try {
         const response = await getInformationCounts();
-        console.log(response,"response------values")
         setInfo(response?.data)
       } catch (error) {
         console.error("Error fetching approved cash deposits:", error);
@@ -102,7 +101,7 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Users Withdrawed Cash</p>
-                      <CardTitle tag="p">23</CardTitle>
+                      <CardTitle tag="p">{info?.getCashWithDrawal}</CardTitle>
                       <p />
                     </div>
                   </Col>
