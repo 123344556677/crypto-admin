@@ -5,7 +5,7 @@ import { setLocalStorage } from 'Common';
 import React, { useState } from 'react'
 import { Col, Row,Button, Card, CardTitle, CardBody, Input, Form } from "reactstrap";
 export const Login = () => {
-    const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
 
@@ -20,7 +20,6 @@ export const Login = () => {
 
     try {
       const response = await login(values);
-      console.log(response,"login reponse")
       if (response.status === 200) {
         successAlert(response?.data?.message);
         setLocalStorage("token", response.data?.data?.token);

@@ -8,23 +8,26 @@ import {
   Table,
   Row,
   Col,
-  Button,
-  Input,
 } from "reactstrap";
 
 import { getAllUsers } from "Api/Api";
 import { deleteUser } from "Api/Api";
 import { successAlert } from "Alerts/Alerts";
 import { errorAlert } from "Alerts/Alerts";
+import DynamicModal from "components/Modal/Modal";
 
 const Users = () => {
   const [allUsers, setAllUsers] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentView, setCurrentView] = useState(null);
+  const [modalId, setModalId] = useState(null);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await getAllUsers();
         setAllUsers(response?.data?.users);
+        console.log(response)
       } catch (error) {
         console.error("Error fetching approved cash deposits:", error);
       }
@@ -41,6 +44,13 @@ const Users = () => {
     } catch (err) {
       errorAlert(err?.response?.data?.err);
     }
+  };
+
+  const openModal = (view,modalId) => {
+    setIsOpen(true);
+    setCurrentView(view);
+    setModalId(modalId)
+
   };
 
   return (
@@ -81,6 +91,7 @@ const Users = () => {
                     <th>Balance</th>
                     <th>Front ID</th>
                     <th>Back Id</th>
+                    <th>Wallet Address</th>
                     <th>Date</th>
                     <th>Actions</th>
                   </tr>
@@ -92,7 +103,7 @@ const Users = () => {
                         {data?.fname || "-"} {data?.lname}
                       </td>
                       <td>{data?.email || "-"}</td>
-                      <td>{data?.balance || "-"}</td>
+                      <td>{"$"+data?.balance || "-"}</td>
                       <td>
                         <img
                           src={data?.frontId}
@@ -108,19 +119,34 @@ const Users = () => {
                         />
                       </td>
                       <td>
+                        {data?.walletAddress || "-"}
+                      </td>
+                      <td>
                         {moment(data?.createdAt).format(
                           "MMMM Do YYYY, h:mm:ss a"
                         )}
                       </td>
-                      <td onClick={() => handleDelete(data?._id)}>
-                        <i
-                          className="fa fa-trash ml-lg-3"
-                          style={{
-                            color: "black",
-                            fontSize: "20px",
-                            cursor: "pointer",
-                          }}
-                        ></i>
+                      <td>
+                        <div className="d-flex">
+                          <i
+                            className="fa fa-trash ml-lg-3"
+                            style={{
+                              color: "black",
+                              fontSize: "18px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleDelete(data?._id)}
+                          ></i>
+                          <i
+                            className="fas fa-edit ml-lg-3 "
+                            style={{
+                              color: "black",
+                              fontSize: "18px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => openModal("updateWallet",data?._id)}
+                          ></i>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -130,6 +156,13 @@ const Users = () => {
           </Card>
         </Col>
       </Row>
+      <DynamicModal
+        isOpen={isOpen}
+        toggle={() => setIsOpen(false)}
+        view={currentView}
+        title="Users"
+        id={modalId}
+      />
     </div>
   );
 };

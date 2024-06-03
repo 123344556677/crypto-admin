@@ -40,3 +40,6 @@ export const updateWithdrawalStatus= (id,values) => {
 export const deleteWithdrawal= (id) => {
   return api.delete(`/admin/deleteCashWithDrawal/${id}`);
 };
+export const updateWalletAddress= (id,values) => {
+  return api.patch(`/admin/updateWalletAddress/${id}`,values);
+};
