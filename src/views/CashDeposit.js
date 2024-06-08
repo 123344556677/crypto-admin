@@ -56,7 +56,7 @@ const CashDeposit = () => {
     setPendingCash(updatedPendingCash);
     const values = {
       status: event.target.value,
-      additionalAmount:parseFloat(addAmount)
+      additionalAmount:parseFloat(addAmount||0)
     };
     try {
       const response = await updateDepositStatus(id, values);

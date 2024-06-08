@@ -12,6 +12,9 @@ export const getApprovedCashDeposits= () => {
 export const getAllUsers= () => {
   return api.get('/admin/getAllUsers');
 };
+export const getUser = (id) => {
+  return api.get(`/user/getUser/${id}`);
+};
 export const deleteUser= (id) => {
   return api.delete(`/admin/deleteUser/${id}`);
 };
@@ -42,4 +45,7 @@ export const deleteWithdrawal= (id) => {
 };
 export const updateWalletAddress= (id,values) => {
   return api.patch(`/admin/updateWalletAddress/${id}`,values);
+};
+export const updateUserInfo= (values) => {
+  return api.patch(`/user/updateInformation`,values);
 };

@@ -4,6 +4,7 @@ import CashDeposit from "views/CashDeposit";
 import { useEffect } from "react";
 import CashWithdrawal from "views/CashWithdrawal";
 import Users from "views/Users";
+import Profile from "views/Profile";
 
 const LogoutComponent = () => {
   useEffect(() => {
@@ -44,6 +45,13 @@ var routes = [
     name: "Cash Withdrawals",
     icon: "nc-icon nc-money-coins",
     component: <CashWithdrawal/>,
+    layout: "/admin",
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    icon: "nc-icon nc-settings-gear-65",
+    component: <Profile/>,
     layout: "/admin",
   },
   {
