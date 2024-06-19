@@ -8,3 +8,9 @@ export const setLocalStorage = (key, value) => {
     }
   });
 };
+export const roundToOneDecimal = (value) => {
+    if (!isNaN(value) && value.toString().includes('.')) {
+      return Math.round(value * 10) / 10;
+    }
+    return value;
+  };

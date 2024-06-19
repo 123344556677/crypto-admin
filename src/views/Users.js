@@ -8,6 +8,8 @@ import {
   Table,
   Row,
   Col,
+  Input,
+  Button,
 } from "reactstrap";
 
 import { getAllUsers } from "Api/Api";
@@ -15,19 +17,23 @@ import { deleteUser } from "Api/Api";
 import { successAlert } from "Alerts/Alerts";
 import { errorAlert } from "Alerts/Alerts";
 import DynamicModal from "components/Modal/Modal";
+import { roundToOneDecimal } from "Common";
+import { addProfitToBalance } from "Api/Api";
 
 const Users = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [currentView, setCurrentView] = useState(null);
   const [modalId, setModalId] = useState(null);
+  const [updateBalance, setUpdateBalance] = useState(null);
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await getAllUsers();
         setAllUsers(response?.data?.users);
-        console.log(response)
+        console.log(response);
       } catch (error) {
         console.error("Error fetching approved cash deposits:", error);
       }
@@ -46,11 +52,24 @@ const Users = () => {
     }
   };
 
-  const openModal = (view,modalId) => {
+  const openModal = (view,title,modalId) => {
     setIsOpen(true);
     setCurrentView(view);
-    setModalId(modalId)
+    setModalId(modalId);
+    setTitle(title);
+  };
 
+  const updateUserBalance = async (id) => {
+    const values = {
+      amount: parseFloat(updateBalance || 0),
+    };
+    try {
+      const response = await addProfitToBalance(values, id);
+      successAlert(response?.data?.message);
+      window.location.reload(false);
+    } catch (err) {
+      errorAlert(err?.response?.data?.err);
+    }
   };
 
   return (
@@ -89,6 +108,7 @@ const Users = () => {
                     <th>Name</th>
                     <th>Email</th>
                     <th>Balance</th>
+                    <th>Update Balance</th>
                     <th>Front ID</th>
                     <th>Back Id</th>
                     <th>Wallet Address</th>
@@ -103,24 +123,46 @@ const Users = () => {
                         {data?.fname || "-"} {data?.lname}
                       </td>
                       <td>{data?.email || "-"}</td>
-                      <td>{"$"+data?.balance || "-"}</td>
+                      <td>{"$" + roundToOneDecimal(data?.balance) || "-"}</td>
                       <td>
-                        <img
-                          src={data?.frontId}
-                          alt="transaction"
-                          style={{ height: "150px", width: "150px" }}
+                        <Input
+                          // value={updateBalance}
+                          onChange={(e) => setUpdateBalance(e.target.value)}
+                          type="number"
+                          placeholder="Enter amount"
+                          required
                         />
+                        <Button
+                          variant="dark"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => updateUserBalance(data?._id)}
+                        >
+                          {" "}
+                          update
+                        </Button>
                       </td>
                       <td>
-                        <img
-                          src={data?.backId}
-                          alt="transaction"
-                          style={{ height: "150px", width: "150px" }}
-                        />
+                      {
+                        // <img
+                        //   src={data?.frontId}
+                        //   alt="transaction"
+                        //   style={{ height: "150px", width: "150px" }}
+                        // />
+                      }
+                      <Button size="md" onClick={() => openModal("ImageViewer","Users", data?.frontId)}>View</Button>
                       </td>
                       <td>
-                        {data?.walletAddress || "-"}
+                      {
+                        // <img
+                        //   src={data?.backId}
+                        //   alt="transaction"
+                        //   style={{ height: "150px", width: "150px" }}
+                        // />
+                      }
+                       <Button size="md" onClick={() => openModal("ImageViewer","Users", data?.backId)}>View</Button>
                       </td>
+                      <td>{data?.walletAddress || "-"}</td>
                       <td>
                         {moment(data?.createdAt).format(
                           "MMMM Do YYYY, h:mm:ss a"
@@ -144,7 +186,7 @@ const Users = () => {
                               fontSize: "18px",
                               cursor: "pointer",
                             }}
-                            onClick={() => openModal("updateWallet",data?._id)}
+                            onClick={() => openModal("updateWallet","Users", data?._id)}
                           ></i>
                         </div>
                       </td>
@@ -160,7 +202,7 @@ const Users = () => {
         isOpen={isOpen}
         toggle={() => setIsOpen(false)}
         view={currentView}
-        title="Users"
+        title={title}
         id={modalId}
       />
     </div>

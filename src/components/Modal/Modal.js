@@ -49,6 +49,13 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
         </div>
       );
       break;
+      case "ImageViewer":
+      content = (
+        <div>
+          <img src={id} alt="cnic"/>
+        </div>
+      );
+      break;
     default:
       content = null;
   }

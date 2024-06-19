@@ -18,6 +18,9 @@ export const getUser = (id) => {
 export const deleteUser= (id) => {
   return api.delete(`/admin/deleteUser/${id}`);
 };
+export const updateUserInfo= (values) => {
+  return api.patch('/user/updateInformation',values);
+};
 
 export const getPendingCashDeposits= () => {
   return api.get('/admin/getPendingCashDeposited');
@@ -46,6 +49,6 @@ export const deleteWithdrawal= (id) => {
 export const updateWalletAddress= (id,values) => {
   return api.patch(`/admin/updateWalletAddress/${id}`,values);
 };
-export const updateUserInfo= (values) => {
-  return api.patch(`/user/updateInformation`,values);
+export const addProfitToBalance= (values,id) => {
+  return api.patch(`/admin/updateUserBalance/${id}`,values);
 };
