@@ -52,3 +52,18 @@ export const updateWalletAddress= (id,values) => {
 export const addProfitToBalance= (values,id) => {
   return api.patch(`/admin/updateUserBalance/${id}`,values);
 };
+export const saveSliderImages= (values) => {
+  return api.patch('/admin/updateImageSlider',values);
+};
+export const getSliderImages= () => {
+  return api.get('/admin/getImageSlider');
+};
+export const deleteSliderImage= (id) => {
+  return api.delete(`/admin/deleteImageFromSlider/${id}`);
+};
+export const saveAbout= (values) => {
+  return api.patch('/admin/updateAbout',values);
+};
+export const getAbout= () => {
+  return api.get('/admin/getAbout');
+};

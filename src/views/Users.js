@@ -82,23 +82,6 @@ const Users = () => {
                 <Col xl={6}>
                   <CardTitle tag="h4">Users</CardTitle>
                 </Col>
-                {
-                  // <Col xl={6} className="text-right">
-                  //   <Button
-                  //     color={paymentCheck === "pending" && "primary"}
-                  //     onClick={() => setPaymentCheck("pending")}
-                  //   >
-                  //     Pending
-                  //   </Button>
-                  //   <Button
-                  //     className="ml-3"
-                  //     color={paymentCheck === "approved" && "primary"}
-                  //     onClick={() => setPaymentCheck("approved")}
-                  //   >
-                  //     Approved
-                  //   </Button>
-                  // </Col>
-                }
               </Row>
             </CardHeader>
             <CardBody>

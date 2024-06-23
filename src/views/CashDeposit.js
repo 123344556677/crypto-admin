@@ -16,12 +16,17 @@ import { updateDepositStatus } from "Api/Api";
 import { errorAlert } from "Alerts/Alerts";
 import { successAlert } from "Alerts/Alerts";
 import { deleteDeposit } from "Api/Api";
+import DynamicModal from "components/Modal/Modal";
 
 const CashDeposit = () => {
   const [approvedCash, setApprovedCash] = useState([]);
   const [pendingCash, setPendingCash] = useState([]);
   const [paymentCheck, setPaymentCheck] = useState("pending");
   const [addAmount, setAddAmount] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentView, setCurrentView] = useState(null);
+  const [modalId, setModalId] = useState(null);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const fetchApprovedCash = async () => {
@@ -56,7 +61,7 @@ const CashDeposit = () => {
     setPendingCash(updatedPendingCash);
     const values = {
       status: event.target.value,
-      additionalAmount:parseFloat(addAmount||0)
+      additionalAmount: parseFloat(addAmount || 0),
     };
     try {
       const response = await updateDepositStatus(id, values);
@@ -91,6 +96,13 @@ const CashDeposit = () => {
     } catch (err) {
       errorAlert(err?.response?.data?.err);
     }
+  };
+
+  const openModal = (view, title, modalId) => {
+    setIsOpen(true);
+    setCurrentView(view);
+    setModalId(modalId);
+    setTitle(title);
   };
   return (
     <div className="content">
@@ -133,7 +145,6 @@ const CashDeposit = () => {
                     <th>Status</th>
                     <th>Date</th>
                     <th>Actions</th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -147,11 +158,18 @@ const CashDeposit = () => {
                         <td>{data?.transactionNumber || "-"}</td>
                         <td>${data?.amount}</td>
                         <td>
-                          <img
-                            src={data?.image}
-                            alt="transaction"
-                            style={{ height: "150px", width: "150px" }}
-                          />
+                          <Button
+                            size="md"
+                            onClick={() =>
+                              openModal(
+                                "ImageViewer",
+                                "Transaction Image",
+                                data?.image
+                              )
+                            }
+                          >
+                            View
+                          </Button>
                         </td>
                         <td>
                           <Input
@@ -246,6 +264,13 @@ const CashDeposit = () => {
           </Card>
         </Col>
       </Row>
+      <DynamicModal
+        isOpen={isOpen}
+        toggle={() => setIsOpen(false)}
+        view={currentView}
+        title={title}
+        id={modalId}
+      />
     </div>
   );
 };
