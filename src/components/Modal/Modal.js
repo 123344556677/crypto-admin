@@ -1,6 +1,7 @@
 import { errorAlert } from "Alerts/Alerts";
 import { successAlert } from "Alerts/Alerts";
 import { saveSliderImages } from "Api/Api";
+import { addAnnouncement } from "Api/Api";
 import { updateWalletAddress } from "Api/Api";
 import { uploadImageToFirebase } from "Common";
 import { toBase64 } from "Common";
@@ -9,21 +10,31 @@ import { Modal, ModalBody, ModalHeader, Input, Form, Button } from "reactstrap";
 
 const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
   const [walletAddress, setWalletAddress] = useState("");
+  const [announcement, setAnnouncement] = useState("");
   const [sliderImage, setSliderImage] = useState("");
   let content;
 
   const submit = async (e) => {
     e.preventDefault();
 
-    const values = {
-      walletAddress: walletAddress,
-    };
-
     try {
       if (view === "updateWallet") {
+        const values = {
+          walletAddress: walletAddress,
+        };
         const response = await updateWalletAddress(id, values);
         successAlert(response?.data?.message);
         window.location.reload(false);
+      }
+      if (view === "Announcements") {
+        const values = {
+          announcement: announcement,
+        };
+        const response = await addAnnouncement(values);
+        if (response?.status === 200) {
+          successAlert("Announcement Made");
+          window.location.reload(false);
+        }
       }
     } catch (err) {
       errorAlert(err?.response?.data?.err);
@@ -46,9 +57,9 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
         image: imageUrl,
       };
       const response = await saveSliderImages(values);
-      if(response?.status===200){
-      successAlert("Image updated successfully");
-      window.location.reload(false);
+      if (response?.status === 200) {
+        successAlert("Image updated successfully");
+        window.location.reload(false);
       }
     } catch (err) {
       errorAlert(err?.response?.data?.err);
@@ -103,6 +114,27 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
           >
             Update
           </Button>
+        </div>
+      );
+      break;
+    case "Announcements":
+      content = (
+        <div>
+          <h4 className="text-center mb-0"> Announcement</h4>
+          <Form onSubmit={submit}>
+            <Input
+              value={announcement}
+              onChange={(e) => setAnnouncement(e.target.value)}
+              type="text"
+              placeholder="Make announcement"
+              required
+              className="mt-3"
+            />
+
+            <Button type="submit" className="border-0 w-100 mt-3 mb-5">
+              Update
+            </Button>
+          </Form>
         </div>
       );
       break;

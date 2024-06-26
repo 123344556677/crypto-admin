@@ -67,3 +67,12 @@ export const saveAbout= (values) => {
 export const getAbout= () => {
   return api.get('/admin/getAbout');
 };
+export const addAnnouncement= (values) => {
+  return api.patch('/setting/addAnnouncement',values);
+};
+export const getAnnouncement= () => {
+  return api.get('/setting/getAnnouncement');
+};
+export const deleteAnnouncement= (id) => {
+  return api.delete(`/setting/deleteAnnouncement/${id}`);
+};

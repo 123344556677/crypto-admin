@@ -3,6 +3,8 @@ import { successAlert } from "Alerts/Alerts";
 import { updateUserInfo } from "Api/Api";
 import { deleteSliderImage } from "Api/Api";
 import { getAbout } from "Api/Api";
+import { deleteAnnouncement } from "Api/Api";
+import { getAnnouncement } from "Api/Api";
 import { saveAbout } from "Api/Api";
 import { getSliderImages } from "Api/Api";
 import { getUser } from "Api/Api";
@@ -31,6 +33,7 @@ const Profile = () => {
   const [modalId, setModalId] = useState(null);
   const [title, setTitle] = useState("");
   const [about, setAbout] = useState("");
+  const [announcement, setAnnouncement] = useState();
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -63,10 +66,20 @@ const Profile = () => {
         console.error("Error fetching approved cash deposits:", error);
       }
     };
+     const fetchAnnouncement = async () => {
+      try {
+        const response = await getAnnouncement();
+        console.log(response,"annoucne response")
+        setAnnouncement(response?.data?.announcements);
+      } catch (error) {
+        console.error("Error fetching approved cash deposits:", error);
+      }
+    };
 
     fetchUserInfo();
     fetchSliderImage();
     fetchAbout();
+    fetchAnnouncement()
   }, []);
 
   const handleChange = (e) => {
@@ -103,6 +116,15 @@ const Profile = () => {
   const handleSliderImageDelete = async (id) => {
     try {
       const response = await deleteSliderImage(id);
+      successAlert(response?.data?.message);
+      window.location.reload(false);
+    } catch (err) {
+      errorAlert(err?.response?.data?.err);
+    }
+  };
+  const handleAnnouncementDelete = async (id) => {
+    try {
+      const response = await deleteAnnouncement(id);
       successAlert(response?.data?.message);
       window.location.reload(false);
     } catch (err) {
@@ -276,6 +298,98 @@ const Profile = () => {
                   Update
                 </Button>
               </Form>
+            </CardBody>
+          </Card>
+           <Card>
+            <CardHeader>
+              <CardTitle tag="h4">Announcements</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>#</th>
+                    <th>Announcement</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {announcement?.map((data, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                       {data?.announcement}
+                      </td>
+                      <td>
+                        <div className="d-flex">
+                          <i
+                            className="fa fa-trash ml-lg-3"
+                            style={{
+                              color: "black",
+                              fontSize: "18px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleAnnouncementDelete(data?._id)}
+                          ></i>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <Button
+                type="button"
+                className="border-0  mt-3 auth-button mb-5"
+                onClick={() => openModal("Announcements", "Add Announcement")}
+              >
+                + Add
+              </Button>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle tag="h4">WhatsApp Numbers</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>#</th>
+                    <th>Announcement</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {announcement?.map((data, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                       {data?.announcement}
+                      </td>
+                      <td>
+                        <div className="d-flex">
+                          <i
+                            className="fa fa-trash ml-lg-3"
+                            style={{
+                              color: "black",
+                              fontSize: "18px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleAnnouncementDelete(data?._id)}
+                          ></i>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <Button
+                type="button"
+                className="border-0  mt-3 auth-button mb-5"
+                onClick={() => openModal("Announcements", "Add Announcement")}
+              >
+                + Add
+              </Button>
             </CardBody>
           </Card>
         </Col>
