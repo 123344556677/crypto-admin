@@ -2,6 +2,7 @@ import { errorAlert } from "Alerts/Alerts";
 import { successAlert } from "Alerts/Alerts";
 import { saveSliderImages } from "Api/Api";
 import { addAnnouncement } from "Api/Api";
+import { addNumber } from "Api/Api";
 import { updateWalletAddress } from "Api/Api";
 import { uploadImageToFirebase } from "Common";
 import { toBase64 } from "Common";
@@ -12,6 +13,8 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
   const [walletAddress, setWalletAddress] = useState("");
   const [announcement, setAnnouncement] = useState("");
   const [sliderImage, setSliderImage] = useState("");
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
   let content;
 
   const submit = async (e) => {
@@ -33,6 +36,17 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
         const response = await addAnnouncement(values);
         if (response?.status === 200) {
           successAlert("Announcement Made");
+          window.location.reload(false);
+        }
+      }
+      if (view === "WhatsApp Number") {
+        const values = {
+          number: number,
+          name:name
+        };
+        const response = await addNumber(values);
+        if (response?.status === 200) {
+          successAlert("Number Added");
           window.location.reload(false);
         }
       }
@@ -127,6 +141,35 @@ const DynamicModal = ({ isOpen, toggle, view, title, id }) => {
               onChange={(e) => setAnnouncement(e.target.value)}
               type="text"
               placeholder="Make announcement"
+              required
+              className="mt-3"
+            />
+
+            <Button type="submit" className="border-0 w-100 mt-3 mb-5">
+              Update
+            </Button>
+          </Form>
+        </div>
+      );
+      break;
+    case "WhatsApp Number":
+      content = (
+        <div>
+          <h4 className="text-center mb-0"> Phone Number</h4>
+          <Form onSubmit={submit}>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              placeholder="name"
+              required
+              className="mt-3"
+            />
+            <Input
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+              type="number"
+              placeholder="phone number"
               required
               className="mt-3"
             />

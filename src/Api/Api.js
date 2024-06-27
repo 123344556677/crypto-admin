@@ -76,3 +76,12 @@ export const getAnnouncement= () => {
 export const deleteAnnouncement= (id) => {
   return api.delete(`/setting/deleteAnnouncement/${id}`);
 };
+export const addNumber= (values) => {
+  return api.patch('/setting/addPhoneNumber',values);
+};
+export const getNumber= () => {
+  return api.get('setting/getPhoneNumber');
+};
+export const deleteNumber= (id) => {
+  return api.delete(`/setting/deletePhoneNumber/${id}`);
+};

@@ -173,7 +173,7 @@ const CashDeposit = () => {
                         </td>
                         <td>
                           <Input
-                            value={addAmount}
+                            // value={addAmount}
                             onChange={(e) => setAddAmount(e.target.value)}
                             type="number"
                             placeholder="Enter amount"

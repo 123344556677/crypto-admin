@@ -4,6 +4,8 @@ import { updateUserInfo } from "Api/Api";
 import { deleteSliderImage } from "Api/Api";
 import { getAbout } from "Api/Api";
 import { deleteAnnouncement } from "Api/Api";
+import { deleteNumber } from "Api/Api";
+import { getNumber } from "Api/Api";
 import { getAnnouncement } from "Api/Api";
 import { saveAbout } from "Api/Api";
 import { getSliderImages } from "Api/Api";
@@ -34,6 +36,7 @@ const Profile = () => {
   const [title, setTitle] = useState("");
   const [about, setAbout] = useState("");
   const [announcement, setAnnouncement] = useState();
+  const [numbers, setNumbers] = useState();
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -66,11 +69,18 @@ const Profile = () => {
         console.error("Error fetching approved cash deposits:", error);
       }
     };
-     const fetchAnnouncement = async () => {
+    const fetchAnnouncement = async () => {
       try {
         const response = await getAnnouncement();
-        console.log(response,"annoucne response")
         setAnnouncement(response?.data?.announcements);
+      } catch (error) {
+        console.error("Error fetching approved cash deposits:", error);
+      }
+    };
+    const fetchNumber = async () => {
+      try {
+        const response = await getNumber();
+        setNumbers(response?.data?.numbers);
       } catch (error) {
         console.error("Error fetching approved cash deposits:", error);
       }
@@ -79,7 +89,8 @@ const Profile = () => {
     fetchUserInfo();
     fetchSliderImage();
     fetchAbout();
-    fetchAnnouncement()
+    fetchAnnouncement();
+    fetchNumber();
   }, []);
 
   const handleChange = (e) => {
@@ -125,6 +136,15 @@ const Profile = () => {
   const handleAnnouncementDelete = async (id) => {
     try {
       const response = await deleteAnnouncement(id);
+      successAlert(response?.data?.message);
+      window.location.reload(false);
+    } catch (err) {
+      errorAlert(err?.response?.data?.err);
+    }
+  };
+  const handleNumberDelete = async (id) => {
+    try {
+      const response = await deleteNumber(id);
       successAlert(response?.data?.message);
       window.location.reload(false);
     } catch (err) {
@@ -300,7 +320,7 @@ const Profile = () => {
               </Form>
             </CardBody>
           </Card>
-           <Card>
+          <Card>
             <CardHeader>
               <CardTitle tag="h4">Announcements</CardTitle>
             </CardHeader>
@@ -317,9 +337,7 @@ const Profile = () => {
                   {announcement?.map((data, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>
-                       {data?.announcement}
-                      </td>
+                      <td>{data?.announcement}</td>
                       <td>
                         <div className="d-flex">
                           <i
@@ -355,17 +373,17 @@ const Profile = () => {
                 <thead className="text-primary">
                   <tr>
                     <th>#</th>
-                    <th>Announcement</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {announcement?.map((data, index) => (
+                  {numbers?.map((data, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>
-                       {data?.announcement}
-                      </td>
+                      <td>{data?.name}</td>
+                      <td>{data?.number}</td>
                       <td>
                         <div className="d-flex">
                           <i
@@ -375,7 +393,7 @@ const Profile = () => {
                               fontSize: "18px",
                               cursor: "pointer",
                             }}
-                            onClick={() => handleAnnouncementDelete(data?._id)}
+                            onClick={() => handleNumberDelete(data?._id)}
                           ></i>
                         </div>
                       </td>
@@ -386,7 +404,7 @@ const Profile = () => {
               <Button
                 type="button"
                 className="border-0  mt-3 auth-button mb-5"
-                onClick={() => openModal("Announcements", "Add Announcement")}
+                onClick={() => openModal("WhatsApp Number", "Add Number")}
               >
                 + Add
               </Button>
